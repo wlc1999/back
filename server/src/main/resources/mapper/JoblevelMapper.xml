@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xxxx.server.mapper.JoblevelMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.xxxx.server.pojo.Joblevel">
+        <id column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="titleLevel" property="titleLevel" />
+        <result column="createDate" property="createDate" />
+        <result column="enabled" property="enabled" />
+        <result column="money" property="money" />
+        <result column="man" property="man" />
+        <result column="nextman" property="nextman" />
+        <result column="face" property="face" />
+    </resultMap>
+
+
+    <resultMap id="CarMap" type="com.xxxx.server.pojo.Joblevel">
+        <result column="name" property="name" />
+        <result column="size" property="size" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, name, titleLevel, createDate, enabled,money , man , nextman
+    </sql>
+    <insert id="incar">
+    insert into t_car(name,money,size) values (#{name},#{money},1)
+    </insert>
+    <delete id="deleteCar">
+      delete from t_car where size=1
+    </delete>
+    <select id="initcar" resultMap="CarMap">
+        select * from t_car
+    </select>
+
+</mapper>

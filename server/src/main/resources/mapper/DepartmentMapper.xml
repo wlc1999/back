@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xxxx.server.mapper.DepartmentMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.xxxx.server.pojo.Department">
+        <id column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="parentId" property="parentId" />
+        <result column="depPath" property="depPath" />
+        <result column="enabled" property="enabled" />
+        <result column="isParent" property="isParent" />
+    </resultMap>
+    <resultMap id="DepartmentWithChildren" type="com.xxxx.server.pojo.Department" extends="BaseResultMap">
+        <collection property="children" ofType="com.xxxx.server.pojo.Department" select="com.xxxx.server.mapper.DepartmentMapper.getAllDepartments" column="id">
+        </collection>  <!--这是一个递归查询  从-1开始查  查出所有的children   column="id" 说明用拿到的id进行传参-->
+
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, name, parentId, depPath, enabled, isParent
+    </sql>
+    <!--删除部门  因为里面是写的自己定义的方法 所以不在使用delete而是使用select-->
+    <select id="deleteDep" statementType="CALLABLE">
+        call deleteDep(#{id,mode=IN,jdbcType=INTEGER},#{result,mode=OUT,jdbcType=INTEGER})
+    </select>
+    <!--添加部门-->
+    <select id="addDep" statementType="CALLABLE"><!--CALLABLE的意思是调用执行过程-->
+        call addDep(#{name,mode=IN,jdbcType=VARCHAR},#{parentId,mode=IN,jdbcType=INTEGER},#{enabled,mode=IN,jdbcType=BOOLEAN},#{result,mode=OUT,jdbcType=INTEGER},#{id,mode=OUT,jdbcType=INTEGER})
+    </select>
+
+    <!--获取所有部门-->
+    <select id="getAllDepartments" resultMap="DepartmentWithChildren">
+        select
+        <include refid="Base_Column_List"/>  <!--这里就是把上面的一行粘贴过来-->
+        from t_department
+        where parentId = #{parentId}
+    </select>
+
+</mapper>
