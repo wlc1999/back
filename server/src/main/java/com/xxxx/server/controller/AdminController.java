@@ -37,7 +37,7 @@ public class AdminController {
         return adminService.getAllAdmins(keywords);
     }
 
-    @ApiOperation(value = "更新操作员")
+    @ApiOperation(value = "更新操作员GitHub测试")
     @PutMapping("/")
     public RespBean updateAdmin(@RequestBody Admin admin){
         if (adminService.updateById(admin)){
